@@ -1,0 +1,55 @@
+// CodeAlpha IoT Task 2 — Sensor-Based Simulation
+// LDR-based LED blink speed controller using Arduino UNO
+
+// Pin Configuration
+int ldrPin = A0;
+int led1 = 8;
+int led2 = 9;
+int led3 = 10;
+
+// Calibration Values
+int minLDR = 54;   // Dark condition value
+int maxLDR = 974;  // Bright condition value
+
+void setup() {
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  Serial.begin(9600);
+  Serial.println("LDR Calibration & LED Control Started");
+}
+
+void loop() {
+  // Read LDR
+  int ldrValue = analogRead(ldrPin);
+
+  // Convert to light percentage
+  int lightPercent = map(ldrValue, minLDR, maxLDR, 0, 100);
+  lightPercent = constrain(lightPercent, 0, 100);
+
+  // Control blinking speed based on light
+  int delayTime = map(lightPercent, 0, 100, 1000, 100);
+
+  // Display data on Serial Monitor
+  Serial.print("Raw LDR: ");
+  Serial.print(ldrValue);
+  Serial.print(" | Light Intensity: ");
+  Serial.print(lightPercent);
+  Serial.print(" %");
+  Serial.print(" | Delay: ");
+  Serial.print(delayTime);
+  Serial.println(" ms");
+
+  // Blink LEDs sequentially
+  digitalWrite(led1, HIGH);
+  delay(delayTime);
+  digitalWrite(led1, LOW);
+
+  digitalWrite(led2, HIGH);
+  delay(delayTime);
+  digitalWrite(led2, LOW);
+
+  digitalWrite(led3, HIGH);
+  delay(delayTime);
+  digitalWrite(led3, LOW);
+}
